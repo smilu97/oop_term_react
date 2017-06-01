@@ -39,7 +39,8 @@ import configureStore from './store';
 import { translationMessages } from './i18n';
 
 // Import CSS reset and Global Styles
-import './global-styles';
+// import './global-styles';
+import 'bootstrap/dist/css/bootstrap.css';
 
 // Import root routes
 import createRoutes from './routes';
@@ -63,6 +64,15 @@ const rootRoute = {
   component: App,
   childRoutes: createRoutes(store),
 };
+
+// Restore login
+import api from './services/api'
+if (localStorage.getItem('whoami_phoneNumber')) {
+  const phoneNumber = localStorage.getItem('whoami_phoneNumber')
+  const password = localStorage.getItem('whoami_password')
+  const auth = btoa('Basic ' + phoneNumber + ':' + password)
+  api.setHeader('Authorization', auth)
+}
 
 const render = (messages) => {
   ReactDOM.render(
