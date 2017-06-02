@@ -1,8 +1,8 @@
 import styled from 'styled-components'
 
-export const Container = styled.div`
+export const MainContainer = styled.div`
     flex:1;
-    flex-direction: row;
+    flex-direction: column;
 `
 
 export const ContentContainer = styled.div`
@@ -27,4 +27,8 @@ export const RightContainer = styled.div`
 export const HelloUser = styled.p`
     font-size: 30px;
     color: white;
+`
+
+export const ContactRow = styled.div`
+    height: 100px;
 `

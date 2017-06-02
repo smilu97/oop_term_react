@@ -27,6 +27,7 @@ export const createAPI = (baseURL="http://localhost:1234") => {
         pageSize,
     })
     res.deleteContact = (otherId) => api.delete(`contact/${otherId}`)
+    res.loadContactsAll = () => api.get(`contacts/all`)
 
     return res
 }

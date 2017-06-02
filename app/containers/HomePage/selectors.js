@@ -18,8 +18,17 @@ const makeSelectHomePage = () => createSelector(
   selectHomePageDomain(),
   (substate) => substate.toJS()
 );
+export const makeSelectContactsFetching = () => createSelector(
+  selectHomePageDomain(),
+  state => state.get('contactsFetching'),
+);
+export const makeSelectContactsError = () => createSelector(
+  selectHomePageDomain(),
+  state => state.get('contactsError'),
+);
+export const makeSelectContacts = () => createSelector(
+  selectHomePageDomain(),
+  state => state.get('contacts'),
+);
 
 export default makeSelectHomePage;
-export {
-  selectHomePageDomain,
-};

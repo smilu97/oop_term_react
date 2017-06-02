@@ -70,7 +70,7 @@ import api from './services/api'
 if (localStorage.getItem('whoami_phoneNumber')) {
   const phoneNumber = localStorage.getItem('whoami_phoneNumber')
   const password = localStorage.getItem('whoami_password')
-  const auth = btoa('Basic ' + phoneNumber + ':' + password)
+  const auth = 'Basic ' + btoa(phoneNumber + ':' + password)
   api.setHeader('Authorization', auth)
 }
 
