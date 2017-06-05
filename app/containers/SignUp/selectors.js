@@ -21,12 +21,12 @@ export const makeSelectSignUp = () => createSelector(
 
 export const makeSelectSignUpFetching = () => createSelector(
   selectSignUpDomain(),
-  state => state.get('signupFetching')
-)
+  (state) => state.get('signupFetching')
+);
 
 export const makeSelectSignUpError = () => createSelector(
   selectSignUpDomain(),
-  state => state.get('signupError')
-)
+  (state) => state.get('signupError')
+);
 
-export default makeSelectSignUp
+export default makeSelectSignUp;

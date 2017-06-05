@@ -18,20 +18,20 @@ export default function createRoutes(store) {
 
   return [
     {
-      path: '/',
-      name: 'home',
+      path: '/contact/list',
+      name: 'contactList',
       getComponent(nextState, cb) {
         const importModules = Promise.all([
-          import('containers/HomePage/reducer'),
-          import('containers/HomePage/sagas'),
-          import('containers/HomePage'),
+          import('containers/ContactList/reducer'),
+          import('containers/ContactList/sagas'),
+          import('containers/ContactList'),
         ]);
 
         const renderRoute = loadModule(cb);
 
         importModules.then(([reducer, sagas, component]) => {
-          injectReducer('homePage', reducer.default);
-          injectSagas(sagas.default)
+          injectReducer('contactList', reducer.default);
+          injectSagas(sagas.default);
           renderRoute(component);
         });
 
@@ -42,14 +42,12 @@ export default function createRoutes(store) {
       name: 'login',
       getComponent(nextState, cb) {
         const importModules = Promise.all([
-          import('containers/Login/sagas'),
           import('containers/Login'),
         ]);
 
         const renderRoute = loadModule(cb);
 
-        importModules.then(([sagas, component]) => {
-          injectSagas(sagas.default);
+        importModules.then(([component]) => {
           renderRoute(component);
         });
 
@@ -70,6 +68,74 @@ export default function createRoutes(store) {
 
         importModules.then(([reducer, sagas, component]) => {
           injectReducer('signUp', reducer.default);
+          injectSagas(sagas.default);
+          renderRoute(component);
+        });
+
+        importModules.catch(errorLoading);
+      },
+    }, {
+      path: '/contact/post',
+      name: 'postContact',
+      getComponent(nextState, cb) {
+        const importModules = Promise.all([
+          import('containers/PostContact/reducer'),
+          import('containers/PostContact/sagas'),
+          import('containers/PostContact'),
+        ]);
+
+        const renderRoute = loadModule(cb);
+
+        importModules.then(([reducer, sagas, component]) => {
+          injectReducer('postContact', reducer.default);
+          injectSagas(sagas.default);
+          renderRoute(component);
+        });
+
+        importModules.catch(errorLoading);
+      },
+    }, {
+      path: '/',
+      name: 'home',
+      getComponent(location, cb) {
+        import('containers/Home')
+          .then(loadModule(cb))
+          .catch(errorLoading);
+      },
+    }, {
+      path: '/contact/:contactId',
+      name: 'contactDetail',
+      getComponent(nextState, cb) {
+        const importModules = Promise.all([
+          import('containers/ContactDetail/reducer'),
+          import('containers/ContactDetail/sagas'),
+          import('containers/ContactDetail'),
+        ]);
+
+        const renderRoute = loadModule(cb);
+
+        importModules.then(([reducer, sagas, component]) => {
+          injectReducer('contactDetail', reducer.default);
+          injectSagas(sagas.default);
+          renderRoute(component);
+        });
+
+        importModules.catch(errorLoading);
+      },
+    }, {
+      path: '/chat/:roomId',
+      name: 'chat',
+      getComponent(nextState, cb) {
+        const importModules = Promise.all([
+          import('containers/Chat/reducer'),
+          import('containers/Chat/sagas'),
+          import('containers/Chat'),
+        ]);
+
+        const renderRoute = loadModule(cb);
+
+        importModules.then(([reducer, sagas, component]) => {
+          injectReducer('chat', reducer.default);
           injectSagas(sagas.default);
           renderRoute(component);
         });

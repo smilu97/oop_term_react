@@ -17,14 +17,9 @@ import { syncHistoryWithStore } from 'react-router-redux';
 import { useScroll } from 'react-router-scroll';
 import 'sanitize.css/sanitize.css';
 
-// Import root app
-import App from 'containers/App';
-
-// Import selector for `syncHistoryWithStore`
-import { makeSelectLocationState } from 'containers/App/selectors';
-
-// Import Language Provider
-import LanguageProvider from 'containers/LanguageProvider';
+// Import socket
+import io from 'socket.io-client';
+import { SocketProvider } from 'socket.io-react';
 
 // Load the favicon, the manifest.json file and the .htaccess file
 /* eslint-disable import/no-unresolved, import/extensions */
@@ -33,17 +28,30 @@ import '!file-loader?name=[name].[ext]!./manifest.json';
 import 'file-loader?name=[name].[ext]!./.htaccess';
 /* eslint-enable import/no-unresolved, import/extensions */
 
+// Import CSS reset and Global Styles
+// import './global-styles';
+import 'bootstrap/dist/css/bootstrap.css';
+
+import { serverURL } from './constants';
+
+// Import selector for `syncHistoryWithStore`
+import { makeSelectLocationState } from './containers/App/selectors';
+
+// Import Language Provider
+import LanguageProvider from './containers/LanguageProvider';
+// Import root app
+import App from './containers/App';
+
 import configureStore from './store';
 
 // Import i18n messages
 import { translationMessages } from './i18n';
 
-// Import CSS reset and Global Styles
-// import './global-styles';
-import 'bootstrap/dist/css/bootstrap.css';
-
 // Import root routes
 import createRoutes from './routes';
+
+// Import sagas to run
+import loginSagas from './containers/Login/sagas';
 
 // Create redux store with history
 // this uses the singleton browserHistory provided by react-router
@@ -65,30 +73,29 @@ const rootRoute = {
   childRoutes: createRoutes(store),
 };
 
-// Restore login
-import api from './services/api'
-if (localStorage.getItem('whoami_phoneNumber')) {
-  const phoneNumber = localStorage.getItem('whoami_phoneNumber')
-  const password = localStorage.getItem('whoami_password')
-  const auth = 'Basic ' + btoa(phoneNumber + ':' + password)
-  api.setHeader('Authorization', auth)
-}
+// register saga
+loginSagas.map(store.runSaga);
+
+// connect socket
+const socket = io.connect(serverURL);
 
 const render = (messages) => {
   ReactDOM.render(
-    <Provider store={store}>
-      <LanguageProvider messages={messages}>
-        <Router
-          history={history}
-          routes={rootRoute}
-          render={
-            // Scroll to top when going to a new page, imitating default browser
-            // behaviour
-            applyRouterMiddleware(useScroll())
-          }
-        />
-      </LanguageProvider>
-    </Provider>,
+    <SocketProvider socket={socket}>
+      <Provider store={store}>
+        <LanguageProvider messages={messages}>
+          <Router
+            history={history}
+            routes={rootRoute}
+            render={
+              // Scroll to top when going to a new page, imitating default browser
+              // behaviour
+              applyRouterMiddleware(useScroll())
+            }
+          />
+        </LanguageProvider>
+      </Provider>
+    </SocketProvider>,
     document.getElementById('app')
   );
 };

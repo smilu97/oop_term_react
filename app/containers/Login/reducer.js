@@ -7,41 +7,51 @@
 import { fromJS } from 'immutable';
 import {
   LOGIN,
+  LOGIN_SUCCESS,
+  LOGIN_FAIL,
+  LOGOUT,
   WHOAMI,
   WHOAMI_SUCCESS,
   WHOAMI_FAIL,
-
-  SIGNUP,
-  SIGNUP_SUCCESS,
-  SIGNUP_FAIL,
 } from './constants';
-
-let login = false;
-if(window.localStorage.getItem('whoami_phoneNumber') != null) {
-  login = true;
-}
 
 const initialState = fromJS({
   loginFetching: false,
   loginError: null,
-  login,
+
+  whoamiFetching: false,
+  whoamiError: null,
+  whoamiCheck: false,
+
+  user: null,
 });
 
 function loginReducer(state = initialState, action) {
   switch (action.type) {
     case LOGIN:
       return state.set('loginFetching', true)
-              .set('loginError', null)
+              .set('loginError', null);
+    case LOGIN_SUCCESS:
+      return state.set('loginFetching', false)
+              .set('user', action.user);
+    case LOGIN_FAIL:
+      return state.set('loginFetching', false)
+              .set('loginError', action.error);
+    case LOGOUT:
+      console.log("logout");
+      localStorage.removeItem('token');
+      return state.set('user', null);
     case WHOAMI:
-      return state.set('loginFetching', true)
-              .set('loginError', null)
+      return state.set('whoamiFetching', true)
+              .set('whoamiError', null);
     case WHOAMI_SUCCESS:
-      return state.set('loginFetching', false)
-              .set('login', true)
+      return state.set('whoamiFetching', false)
+              .set('user', action.user)
+              .set('whoamiCheck', true);
     case WHOAMI_FAIL:
-      return state.set('loginFetching', false)
-              .set('login', false) 
-              .set('loginError', action.error)
+      return state.set('whoamiFetching', false)
+              .set('whoamiError', action.error)
+              .set('whoamiCheck', true);
     default:
       return state;
   }

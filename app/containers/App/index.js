@@ -12,18 +12,44 @@
  */
 
 import React from 'react';
+import { socketConnect } from 'socket.io-react';
+import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
 
-export default class App extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
+import {
+  whoami,
+} from '../Login/actions';
+
+export class App extends React.Component { // eslint-disable-line react/prefer-stateless-function
 
   static propTypes = {
     children: React.PropTypes.node,
+    socket: React.PropTypes.object,
+    whoami: React.PropTypes.func,
   };
+
+  componentDidMount() {
+    window.onbeforeunload = () => {
+      this.props.socket.disconnect();
+    };
+    this.props.whoami();
+  }
 
   render() {
     return (
-      <div style={{ display: 'flex' }} >
+      <div style={{ flex: 1 }} >
         {React.Children.toArray(this.props.children)}
       </div>
     );
   }
 }
+
+export const mapStateToProps = createStructuredSelector({
+
+});
+
+export const mapDispatchToProps = (dispatch) => ({
+  whoami: () => dispatch(whoami()),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(socketConnect(App));

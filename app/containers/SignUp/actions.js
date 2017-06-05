@@ -12,12 +12,14 @@ import {
 
 export const signup = (name, phoneNumber, password) => ({
   type: SIGNUP,
-  name, phoneNumber, password,
-})
+  name,
+  phoneNumber,
+  password,
+});
 export const signupSuccess = () => ({
   type: SIGNUP_SUCCESS,
-})
+});
 export const signupFail = (error) => ({
   type: SIGNUP_FAIL,
   error,
-})
+});

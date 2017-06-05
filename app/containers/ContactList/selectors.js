@@ -3,7 +3,7 @@ import { createSelector } from 'reselect';
 /**
  * Direct selector to the homePage state domain
  */
-const selectHomePageDomain = () => (state) => state.get('homePage');
+const selectHomePageDomain = () => (state) => state.get('contactList');
 
 /**
  * Other specific selectors
@@ -20,15 +20,16 @@ const makeSelectHomePage = () => createSelector(
 );
 export const makeSelectContactsFetching = () => createSelector(
   selectHomePageDomain(),
-  state => state.get('contactsFetching'),
+  (state) => state.get('contactsFetching'),
 );
 export const makeSelectContactsError = () => createSelector(
   selectHomePageDomain(),
-  state => state.get('contactsError'),
+  (state) => state.get('contactsError'),
 );
 export const makeSelectContacts = () => createSelector(
   selectHomePageDomain(),
-  state => state.get('contacts'),
+  (state) => state.get('contacts'),
 );
+
 
 export default makeSelectHomePage;
