@@ -22,16 +22,12 @@ export default function createRoutes(store) {
       name: 'contactList',
       getComponent(nextState, cb) {
         const importModules = Promise.all([
-          import('containers/ContactList/reducer'),
-          import('containers/ContactList/sagas'),
           import('containers/ContactList'),
         ]);
 
         const renderRoute = loadModule(cb);
 
-        importModules.then(([reducer, sagas, component]) => {
-          injectReducer('contactList', reducer.default);
-          injectSagas(sagas.default);
+        importModules.then(([component]) => {
           renderRoute(component);
         });
 
@@ -136,6 +132,26 @@ export default function createRoutes(store) {
 
         importModules.then(([reducer, sagas, component]) => {
           injectReducer('chat', reducer.default);
+          injectSagas(sagas.default);
+          renderRoute(component);
+        });
+
+        importModules.catch(errorLoading);
+      },
+    }, {
+      path: '/chatroom/post',
+      name: 'postChatRoom',
+      getComponent(nextState, cb) {
+        const importModules = Promise.all([
+          import('containers/PostChatRoom/reducer'),
+          import('containers/PostChatRoom/sagas'),
+          import('containers/PostChatRoom'),
+        ]);
+
+        const renderRoute = loadModule(cb);
+
+        importModules.then(([reducer, sagas, component]) => {
+          injectReducer('postChatRoom', reducer.default);
           injectSagas(sagas.default);
           renderRoute(component);
         });

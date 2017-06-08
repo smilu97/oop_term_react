@@ -20,8 +20,6 @@ const initialState = fromJS({
   loginError: null,
 
   whoamiFetching: false,
-  whoamiError: null,
-  whoamiCheck: false,
 
   user: null,
 });
@@ -38,20 +36,13 @@ function loginReducer(state = initialState, action) {
       return state.set('loginFetching', false)
               .set('loginError', action.error);
     case LOGOUT:
-      console.log("logout");
-      localStorage.removeItem('token');
       return state.set('user', null);
     case WHOAMI:
-      return state.set('whoamiFetching', true)
-              .set('whoamiError', null);
+      return state.set('whoamiFetching', false);
     case WHOAMI_SUCCESS:
-      return state.set('whoamiFetching', false)
-              .set('user', action.user)
-              .set('whoamiCheck', true);
+      return state.set('whoamiFetching', true);
     case WHOAMI_FAIL:
-      return state.set('whoamiFetching', false)
-              .set('whoamiError', action.error)
-              .set('whoamiCheck', true);
+      return state.set('whoamiFetching', true);
     default:
       return state;
   }

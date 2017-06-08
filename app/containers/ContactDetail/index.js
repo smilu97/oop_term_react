@@ -37,6 +37,7 @@ import {
 } from './selectors';
 
 import { makeSelectLogin } from '../Login/selectors';
+import { makeSelectPersisted } from '../../globals/global/selectors';
 
 // import actions
 import {
@@ -58,8 +59,7 @@ export class ContactDetail extends React.Component { // eslint-disable-line reac
     };
   }
   componentDidMount() {
-    const { contactId } = this.props.params;
-    this.props.loadContact(Number(contactId));
+    if (this.props.persisted) this.initial(this.props);
   }
   componentWillReceiveProps(nextProps) {
     if (this.props.deleting === true && nextProps.deleting === false) {
@@ -76,6 +76,16 @@ export class ContactDetail extends React.Component { // eslint-disable-line reac
       } else {
         this.toggleModal(`일대일 채팅방 로드에 실패했습니다. error: ${nextProps.otoError}`);
       }
+    }
+    if (this.props.persisted === false && nextProps.persisted === true) {
+      this.initial(nextProps);
+    }
+  }
+  initial(props) {
+    if (props.Login.user) {
+      this.props.loadContact(Number(this.props.params.contactId));
+    } else {
+      browserHistory.push('/login');
     }
   }
   toggleModal(modalMsg = '') {
@@ -96,8 +106,9 @@ export class ContactDetail extends React.Component { // eslint-disable-line reac
           <p className="lead">전화번호: {contact.phoneNumber}</p>
         </Flex>
         <Flex>
-          <Button color="primary" onClick={() => this.chat(contact.id)}>Chat</Button><br />
-          <Button color="danger" onClick={() => this.delete(contact.id)} >DELETE</Button>
+          <Button style={{ marginBottom: '5px' }} color="info" href={`tel:+82${contact.phoneNumber}`}>CALL</Button>
+          <Button style={{ marginBottom: '5px' }} color="primary" onClick={() => this.chat(contact.id)}>CHAT</Button>
+          <Button style={{ marginBottom: '5px' }} color="danger" onClick={() => this.delete(contact.id)} >DELETE</Button>
         </Flex>
       </DetailContainer>
     );
@@ -140,6 +151,8 @@ ContactDetail.propTypes = {
   deleteContact: PropTypes.func,
   fetchingOto: PropTypes.bool,
   loadOtoRoom: PropTypes.func,
+  Login: PropTypes.object,
+  persisted: PropTypes.bool,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -152,6 +165,7 @@ const mapStateToProps = createStructuredSelector({
   fetchingOto: makeSelectFetchingOto(),
   otoError: makeSelectOtoError(),
   Login: makeSelectLogin(),
+  persisted: makeSelectPersisted(),
 });
 
 function mapDispatchToProps(dispatch) {

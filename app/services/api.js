@@ -37,6 +37,12 @@ export const createAPI = (baseURL = serverURL) => {
 
   res.loadOtoRoom = (contactId) => api.get(`room/one_to_one/${contactId}`);
   res.loadRoom = (roomId) => api.get(`room/${roomId}`);
+  res.loadRooms = () => api.get('room/all');
+
+  res.postChatroom = (name, users) => api.post('room', { name, users });
+
+  res.inviteMany = (roomId, users) => api.post(`room/${roomId}/invite`, { users });
+  res.exitRoom = (roomId) => api.post(`room/${roomId}/exit`);
 
   return res;
 };

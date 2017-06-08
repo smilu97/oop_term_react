@@ -8,6 +8,7 @@ import React, { PropTypes } from 'react';
 import { browserHistory } from 'react-router';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
+import styled from 'styled-components';
 
 // import styled from reactstrap
 import {
@@ -26,6 +27,14 @@ import { logout } from '../../containers/Login/actions';
 // import selectors
 import { makeSelectLogin } from '../../containers/Login/selectors';
 
+const MyNavItem = styled(NavItem)`
+  border-radius: 5px;
+  &:hover {
+    background-color: blue;
+    color: white;
+  }
+`;
+
 class Header extends React.Component { // eslint-disable-line react/prefer-stateless-function
   constructor(props) {
     super(props);
@@ -42,21 +51,22 @@ class Header extends React.Component { // eslint-disable-line react/prefer-state
   }
   renderLink(onClick, title) {
     return (
-      <NavItem>
+      <MyNavItem>
         <NavLink onClick={onClick}>{title}</NavLink>
-      </NavItem>
+      </MyNavItem>
     );
   }
   render() {
-    const contact = [this.renderLink(() => this.goto('/contact/list'), 'Contact')];
     const whenNotLogin = [
       this.renderLink(() => this.goto('/login'), 'Login'),
       this.renderLink(() => this.goto('/signup'), 'Sign Up'),
     ];
     const whenLogin = [
+      this.renderLink(() => this.goto('/contact/list'), 'Contact'),
+      this.renderLink(() => this.goto('/chatroom/post'), 'Create Chat'),
       this.renderLink(() => this.logout(), 'Logout'),
     ];
-    const list = contact.concat(this.props.Login.user ? whenLogin : whenNotLogin);
+    const list = this.props.Login.user ? whenLogin : whenNotLogin;
     return (
       <Navbar color="faded" light toggleable>
         <NavbarToggler right onClick={() => this.setState({ navOpen: !(this.state.navOpen) })} />

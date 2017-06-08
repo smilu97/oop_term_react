@@ -12,10 +12,9 @@ import { browserHistory } from 'react-router';
 
 // import components
 import Scrollbars from 'react-custom-scrollbars';
-import { StickyContainer, Sticky } from 'react-sticky';
 
 // import icons
-import { MdChevronRight } from 'react-icons/lib/md';
+import { MdChevronRight, MdAddCircle } from 'react-icons/lib/md';
 
 // import reactstrap components
 import {
@@ -34,6 +33,10 @@ import {
   makeSelectLogin,
 } from '../Login/selectors';
 
+import {
+  makeSelectPersisted,
+} from '../../globals/global/selectors';
+
 // import actions
 import {
   loadContacts,
@@ -48,6 +51,7 @@ import {
   ContactName,
   ContactPhoneNumber,
   SearchInput,
+  BottomFloatingButton,
 } from './components';
 
 // import my components
@@ -65,21 +69,20 @@ export class HomePage extends React.Component {
     };
   }
   componentDidMount() {
-    if (this.props.Login.whoamiCheck) {
-      if (this.props.Login.user) {
-        this.props.loadContacts();
-      } else {
-        browserHistory.push('/login');
-      }
-    }
+    if (this.props.persisted) this.initial(this.props);
   }
   componentWillReceiveProps(nextProps) {
-    if (this.props.Login.whoamiCheck === false && nextProps.Login.whoamiCheck === true) {
-      if (nextProps.Login.user) {
-        this.props.loadContacts();
-      } else {
-        browserHistory.push('/login');
+    if (this.props.persisted === false && nextProps.persisted === true) {
+      this.initial(nextProps);
+    }
+  }
+  initial(props) {
+    if (props.Login.user) {
+      if (props.contacts === null) {
+        props.loadContacts();
       }
+    } else {
+      browserHistory.push('/login');
     }
   }
   handleContactClick(contact) {
@@ -136,7 +139,7 @@ export class HomePage extends React.Component {
       <MainContainer>
         <Header />
         <SidebarContainer
-          fetching={this.props.contactsFetching || !this.props.Login.whoamiCheck}
+          fetching={this.props.contacts === null}
         >
           <SearchInput
             style={{ boxShadow: `0 0 ${this.state.scrollTop ? '10px' : '0'} 0` }}
@@ -147,6 +150,9 @@ export class HomePage extends React.Component {
           <Scrollbars style={{ flex: 1 }} onScrollFrame={(e) => this.handleScroll(e)}>
             {this.renderContacts()}
           </Scrollbars>
+          <BottomFloatingButton onClick={() => browserHistory.push('/contact/post')}>
+            <MdAddCircle size={80} color="#0275d8" />
+          </BottomFloatingButton>
         </SidebarContainer>
         {this.renderModal()}
       </MainContainer>
@@ -159,6 +165,7 @@ HomePage.propTypes = {
   contactsFetching: PropTypes.bool,
   Login: PropTypes.object,
   loadContacts: PropTypes.func,
+  persisted: PropTypes.bool,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -166,6 +173,7 @@ const mapStateToProps = createStructuredSelector({
   contactsError: makeSelectContactsError(),
   contacts: makeSelectContacts(),
   Login: makeSelectLogin(),
+  persisted: makeSelectPersisted(),
 });
 
 const mapDispatchToProps = (dispatch) => ({

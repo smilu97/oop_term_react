@@ -8,6 +8,7 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { browserHistory } from 'react-router';
+import { socketConnect } from 'socket.io-react';
 
 // Import components
 import { StickyContainer, Sticky } from 'react-sticky';
@@ -48,6 +49,9 @@ export class Login extends React.Component { // eslint-disable-line react/prefer
   componentWillReceiveProps(nextProps) {
     if (this.props.Login.loginFetching === true && nextProps.Login.loginFetching === false) {
       if (nextProps.Login.loginError === null) {
+        nextProps.socket.emit('user_join', {
+          token: nextProps.Login.user.token,
+        });
         browserHistory.push('/contact/list');
       } else {
         this.toggleModal(nextProps.Login.loginError);
@@ -164,4 +168,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Login);
+export default connect(mapStateToProps, mapDispatchToProps)(socketConnect(Login));

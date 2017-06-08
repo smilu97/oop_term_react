@@ -16,23 +16,45 @@ import { socketConnect } from 'socket.io-react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 
-import {
-  whoami,
-} from '../Login/actions';
+import { makeSelectLogin } from '../Login/selectors';
+import { makeSelectPersisted } from '../../globals/global/selectors';
 
 export class App extends React.Component { // eslint-disable-line react/prefer-stateless-function
 
   static propTypes = {
     children: React.PropTypes.node,
     socket: React.PropTypes.object,
-    whoami: React.PropTypes.func,
+    persisted: React.PropTypes.bool,
+    Login: React.PropTypes.object,
   };
 
   componentDidMount() {
     window.onbeforeunload = () => {
+      if (this.props.Login.user) {
+        this.props.socket.emit('user_out', {
+          token: this.props.Login.user.token,
+        });
+      }
       this.props.socket.disconnect();
     };
-    this.props.whoami();
+    if (this.props.persisted) this.initial(this.props);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.persisted === false && nextProps.persisted === true) this.initial(nextProps);
+    if (this.props.Login.user && nextProps.Login.user === null) {
+      this.props.socket.emit('user_out', {
+        token: this.props.Login.user.token,
+      });
+    }
+  }
+
+  initial(props) {
+    if (props.Login.user) {
+      props.socket.emit('user_join', {
+        token: props.Login.user.token,
+      });
+    }
   }
 
   render() {
@@ -45,11 +67,12 @@ export class App extends React.Component { // eslint-disable-line react/prefer-s
 }
 
 export const mapStateToProps = createStructuredSelector({
-
+  Login: makeSelectLogin(),
+  persisted: makeSelectPersisted(),
 });
 
-export const mapDispatchToProps = (dispatch) => ({
-  whoami: () => dispatch(whoami()),
+export const mapDispatchToProps = () => ({
+
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(socketConnect(App));

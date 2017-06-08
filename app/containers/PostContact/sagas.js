@@ -5,6 +5,9 @@ import {
   postContactSuccess,
   postContactFail,
 } from './actions';
+import {
+  loadContacts
+} from '../ContactList/actions';
 
 import {
   POST_CONTACT,
@@ -16,6 +19,7 @@ export function* postContact(action) {
   if (res.ok) {
     if (data.success) {
       yield put(postContactSuccess());
+      yield put(loadContacts());
     } else {
       yield put(postContactFail(data.error));
     }

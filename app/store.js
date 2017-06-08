@@ -5,8 +5,16 @@
 import { createStore, applyMiddleware, compose } from 'redux';
 import { fromJS } from 'immutable';
 import { routerMiddleware } from 'react-router-redux';
+import { persistStore, autoRehydrate } from 'redux-persist-immutable';
 import createSagaMiddleware from 'redux-saga';
 import createReducer from './reducers';
+
+import { persistConfig } from './utils/persistConfig';
+
+import api from './services/api';
+
+import { whoami } from './containers/Login/actions';
+import { persist } from './globals/global/actions';
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -21,6 +29,7 @@ export default function configureStore(initialState = {}, history) {
 
   const enhancers = [
     applyMiddleware(...middlewares),
+    autoRehydrate(),
   ];
 
   // If Redux DevTools Extension is installed use it, otherwise use Redux compose
@@ -37,6 +46,16 @@ export default function configureStore(initialState = {}, history) {
     fromJS(initialState),
     composeEnhancers(...enhancers)
   );
+
+  // persist
+  persistStore(store, persistConfig, (err, state) => {
+    const user = state.login.get('user');
+    if (user) {
+      const { token } = user;
+      api.setHeader('Authorization', `Token ${token}`);
+    }
+    store.dispatch(persist());
+  });
 
   // Extensions
   store.runSaga = sagaMiddleware.run;

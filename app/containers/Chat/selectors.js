@@ -32,7 +32,24 @@ export const makeSelectMessages = () => createSelector(
 );
 export const makeSelectRoom = () => createSelector(
   selectChatDomain(),
-  (substate) => substate.get('room'),
+  (substate) => (substate.get('room') && substate.get('room').toJS()),
 );
+export const makeSelectInviting = () => createSelector(
+  selectChatDomain(),
+  (substate) => substate.get('inviting'),
+);
+export const makeSelectInviteError = () => createSelector(
+  selectChatDomain(),
+  (substate) => substate.get('inviteError'),
+);
+export const makeSelectExiting = () => createSelector(
+  selectChatDomain(),
+  (substate) => substate.get('exiting'),
+);
+export const makeSelectExitError = () => createSelector(
+  selectChatDomain(),
+  (substate) => substate.get('exitError'),
+);
+
 
 export default makeSelectChat;

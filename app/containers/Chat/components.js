@@ -41,12 +41,31 @@ export const MessageRow = styled.div`
 `;
 export const MessageBox = styled.div`
     display: flex;
-    flex-direction: column;
     justify-content: center;
 `;
 export const MessageText = styled.p`
-    
+    border: 1px solid black;
+    border-radius: 3px;
+    padding: 5px;
+`;
+export const MessageTextBox = styled.div`
+    margin: 0 10px;
+`;
+export const MessageThumbBox = styled.div`
+    width: 50px;
+`;
+export const MessageUsername = styled.p`
+    font-weight: bold;
+    margin: 0; padding: 0;
+`;
+export const MessageThumb = styled.img`
 `;
 export const Title = styled.p`
     font-size: 20px;
 `;
+export const TabItemContainer = styled.div`
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+`;
+

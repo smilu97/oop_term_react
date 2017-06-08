@@ -23,6 +23,8 @@ import {
   makeSelectPostContactError,
 } from './selectors';
 
+import { makeSelectPersisted } from '../../globals/global/selectors';
+
 import { makeSelectLogin } from '../Login/selectors';
 
 import {
@@ -42,6 +44,9 @@ export class PostContact extends React.Component { // eslint-disable-line react/
       phoneNumber: '',
     };
   }
+  componentDidMount() {
+    if (this.props.persisted) this.initial(this.props);
+  }
   componentWillReceiveProps(nextProps) {
     if (this.props.fetching === true && nextProps.fetching === false) {
       if (nextProps.error == null) {
@@ -49,6 +54,17 @@ export class PostContact extends React.Component { // eslint-disable-line react/
       } else {
         this.toggleModal(nextProps.error);
       }
+    }
+    if (this.props.persisted === false && nextProps.persisted === true) {
+      this.initial(nextProps);
+    }
+  }
+  initial(props) {
+    console.log(props.user);
+    if (props.Login.user) {
+      // TODO: Initial?
+    } else {
+      browserHistory.push('/login');
     }
   }
   toggleModal(modalMsg) {
@@ -125,12 +141,14 @@ PostContact.propTypes = {
   fetching: PropTypes.bool,
   postContact: PropTypes.func,
   Login: PropTypes.object,
+  persisted: PropTypes.bool,
 };
 
 const mapStateToProps = createStructuredSelector({
   fetching: makeSelectPostContactFetching(),
   error: makeSelectPostContactError(),
   Login: makeSelectLogin(),
+  persisted: makeSelectPersisted(),
 });
 
 function mapDispatchToProps(dispatch) {

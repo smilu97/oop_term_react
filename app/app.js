@@ -52,6 +52,11 @@ import createRoutes from './routes';
 
 // Import sagas to run
 import loginSagas from './containers/Login/sagas';
+import roomSagas from './globals/room/sagas';
+import contactListSagas from './containers/ContactList/sagas';
+
+// Import actions
+import { newMessage } from './globals/room/actions';
 
 // Create redux store with history
 // this uses the singleton browserHistory provided by react-router
@@ -75,9 +80,16 @@ const rootRoute = {
 
 // register saga
 loginSagas.map(store.runSaga);
+roomSagas.map(store.runSaga);
+contactListSagas.map(store.runSaga);
 
 // connect socket
 const socket = io.connect(serverURL);
+
+//
+socket.on('chat', (v) => {
+  store.dispatch(newMessage(v.roomId));
+});
 
 const render = (messages) => {
   ReactDOM.render(

@@ -3,7 +3,7 @@ import styled from 'styled-components';
 export const MainContainer = styled.div`
     flex-direction: column;
     display: flex;
-    position: absolute;
+    position: fixed;
     left: 0;
     right: 0;
     top: 0;
@@ -54,4 +54,15 @@ export const ContactOptionContainer = styled.div`
     justify-content: center;
     align-items: center;
     background-color: transparent;
+`;
+export const BottomFloatingButton = styled.div`
+    position: absolute;
+    right: 60px;
+    bottom: 10px;
+    width: 100px;
+    height: 100px;
+    background-color: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 `;

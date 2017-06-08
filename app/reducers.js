@@ -10,6 +10,9 @@ import { LOCATION_CHANGE } from 'react-router-redux';
 import languageProviderReducer from 'containers/LanguageProvider/reducer';
 
 import loginReducer from './containers/Login/reducer';
+import roomReducer from './globals/room/reducer';
+import globalReducer from './globals/global/reducer';
+import contactListReducer from './containers/ContactList/reducer';
 
 /*
  * routeReducer
@@ -37,6 +40,7 @@ function routeReducer(state = routeInitialState, action) {
       return state;
   }
 }
+
 /**
  * Creates the main reducer with the asynchronously loaded ones
  */
@@ -44,6 +48,9 @@ export default function createReducer(asyncReducers) {
   return combineReducers({
     route: routeReducer,
     login: loginReducer,
+    room: roomReducer,
+    global: globalReducer,
+    contactList: contactListReducer,
     language: languageProviderReducer,
     ...asyncReducers,
   });
