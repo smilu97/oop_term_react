@@ -85,6 +85,7 @@ contactListSagas.map(store.runSaga);
 
 // connect socket
 const socket = io.connect(serverURL);
+socket.heartbeatTimeout = 20000;
 
 //
 socket.on('chat', (v) => {

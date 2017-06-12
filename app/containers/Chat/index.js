@@ -200,7 +200,7 @@ export class Chat extends React.Component { // eslint-disable-line react/prefer-
     const thumb = (
       <MessageThumbBox>
         <MessageThumb
-          src="http://via.placeholder.com/50x50"
+          src="https://via.placeholder.com/50x50"
           onClick={() => browserHistory.push(`/contact/${msg.userId}`)}
         />
       </MessageThumbBox>
