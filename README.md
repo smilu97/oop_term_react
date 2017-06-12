@@ -24,6 +24,7 @@ Author:
 * [ImmutableJS](https://facebook.github.io/immutable-js/)
 * [socket.io-react](https://github.com/PlatziDev/socket.io-react)
 * [apisauce](https://github.com/skellock/apisauce)
+* [reactstrap](https://reactstrap.github.io/)
 
 ## How to setup
 
@@ -46,4 +47,4 @@ npm run build
 npm start
 ```
 
-localhost:3000 에 실행됩니다.
+http://localhost:3000 에 실행됩니다.
