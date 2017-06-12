@@ -49,10 +49,12 @@ export default function configureStore(initialState = {}, history) {
 
   // persist
   persistStore(store, persistConfig, (err, state) => {
-    const user = state.login.get('user');
-    if (user) {
-      const { token } = user;
-      api.setHeader('Authorization', `Token ${token}`);
+    if (state.login) {
+      const user = state.login.get('user');
+      if (user) {
+        const { token } = user;
+        api.setHeader('Authorization', `Token ${token}`);
+      }
     }
     store.dispatch(persist());
   });

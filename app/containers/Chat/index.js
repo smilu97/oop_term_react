@@ -113,6 +113,10 @@ export class Chat extends React.Component { // eslint-disable-line react/prefer-
         browserHistory.push('/contact/list');
       }
     }
+    // about changing roomId
+    if (this.props.params.roomId !== nextProps.params.roomId) {
+      this.props.socket.removeListener('chat', this.chatListener);
+    }
   }
   componentWillUnmount() {
     this.props.socket.removeListener('chat', this.chatListener);

@@ -1,5 +1,6 @@
 
 import { fromJS } from 'immutable';
+import { browserHistory } from 'react-router';
 import {
   LOAD_ROOMS,
   LOAD_ROOMS_SUCCESS,
@@ -29,6 +30,7 @@ function roomReducer(state = initialState, action) {
       return state.set('fetching', false)
               .set('error', action.error);
     case NEW_MESSAGE:
+      if (browserHistory.getCurrentLocation().pathname === `/chat/${action.roomId}`) return state;
       if (state.get('rooms') === null) return state;
       if (state.get('rooms').get(action.roomId) === null) return state;
       return state.setIn(['rooms', `${action.roomId}`, 'new'], true);
