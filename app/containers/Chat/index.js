@@ -35,6 +35,9 @@ import {
 import { checkRoom } from '../../globals/room/actions';
 import { loadContacts } from '../ContactList/actions';
 
+// import constants
+import { serverURL } from '../../constants';
+
 // import selectors
 import {
   makeSelectFetching,
@@ -200,7 +203,7 @@ export class Chat extends React.Component { // eslint-disable-line react/prefer-
     const thumb = (
       <MessageThumbBox>
         <MessageThumb
-          src="https://via.placeholder.com/50x50"
+          src={`${serverURL}/user/${msg.userId}/profile/image`}
           onClick={() => browserHistory.push(`/contact/${msg.userId}`)}
         />
       </MessageThumbBox>

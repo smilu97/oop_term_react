@@ -26,6 +26,7 @@ import { logout } from '../../containers/Login/actions';
 
 // import selectors
 import { makeSelectLogin } from '../../containers/Login/selectors';
+import { makeSelectGlobal } from '../../globals/global/selectors';
 
 const MyNavItem = styled(NavItem)`
   border-radius: 5px;
@@ -33,6 +34,10 @@ const MyNavItem = styled(NavItem)`
     background-color: blue;
     color: white;
   }
+`;
+
+const connectionStateText = styled.p`
+  float: right;
 `;
 
 class Header extends React.Component { // eslint-disable-line react/prefer-stateless-function
@@ -67,6 +72,7 @@ class Header extends React.Component { // eslint-disable-line react/prefer-state
       this.renderLink(() => this.logout(), 'Logout'),
     ];
     const list = this.props.Login.user ? whenLogin : whenNotLogin;
+    const isConnect = this.props.Global.socketConnected;
     return (
       <Navbar color="faded" light toggleable>
         <NavbarToggler right onClick={() => this.setState({ navOpen: !(this.state.navOpen) })} />
@@ -76,6 +82,9 @@ class Header extends React.Component { // eslint-disable-line react/prefer-state
             <Nav key={idx}>{item}</Nav>
           )) }
         </Collapse>
+        <connectionStateText style={{ color: isConnect ? 'blue' : 'red' }}>
+          {isConnect ? 'connected' : 'disconnected'}
+        </connectionStateText>
       </Navbar>
     );
   }
@@ -84,10 +93,12 @@ class Header extends React.Component { // eslint-disable-line react/prefer-state
 Header.propTypes = {
   Login: PropTypes.object,
   logout: PropTypes.func,
+  Global: PropTypes.object,
 };
 
 export const mapStateToProps = createStructuredSelector({
   Login: makeSelectLogin(),
+  Global: makeSelectGlobal(),
 });
 
 export const mapDispatchToProps = (dispatch) => ({

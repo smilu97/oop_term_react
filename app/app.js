@@ -18,7 +18,6 @@ import { useScroll } from 'react-router-scroll';
 import 'sanitize.css/sanitize.css';
 
 // Import socket
-import io from 'socket.io-client';
 import { SocketProvider } from 'socket.io-react';
 
 // Load the favicon, the manifest.json file and the .htaccess file
@@ -31,8 +30,6 @@ import 'file-loader?name=[name].[ext]!./.htaccess';
 // Import CSS reset and Global Styles
 // import './global-styles';
 import 'bootstrap/dist/css/bootstrap.css';
-
-import { serverURL } from './constants';
 
 // Import selector for `syncHistoryWithStore`
 import { makeSelectLocationState } from './containers/App/selectors';
@@ -55,8 +52,8 @@ import loginSagas from './containers/Login/sagas';
 import roomSagas from './globals/room/sagas';
 import contactListSagas from './containers/ContactList/sagas';
 
-// Import actions
-import { newMessage } from './globals/room/actions';
+// Import socket
+import makeSocket from './socket';
 
 // Create redux store with history
 // this uses the singleton browserHistory provided by react-router
@@ -83,14 +80,7 @@ loginSagas.map(store.runSaga);
 roomSagas.map(store.runSaga);
 contactListSagas.map(store.runSaga);
 
-// connect socket
-const socket = io.connect(serverURL);
-socket.heartbeatTimeout = 20000;
-
-//
-socket.on('chat', (v) => {
-  store.dispatch(newMessage(v.roomId));
-});
+const socket = makeSocket(store);
 
 const render = (messages) => {
   ReactDOM.render(
